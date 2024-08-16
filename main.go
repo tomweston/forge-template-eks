@@ -1,8 +1,6 @@
 package main
 
 import (
-	"strconv"
-
 	"github.com/pulumi/pulumi-eks/sdk/go/eks"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi/config"
@@ -13,27 +11,13 @@ func main() {
 
 		cfg := config.New(ctx, "")
 
-		desiredCapacity, err := strconv.Atoi(cfg.Require("desiredCapacity"))
-		if err != nil {
-			return err
-		}
-
-		minSize, err := strconv.Atoi(cfg.Require("minSize"))
-		if err != nil {
-			return err
-		}
-
-		maxSize, err := strconv.Atoi(cfg.Require("maxSize"))
-		if err != nil {
-			return err
-		}
-
 		version := cfg.Require("version")
 
-		cluster, err := eks.NewCluster(ctx, "cluster", &eks.ClusterArgs{
-			DesiredCapacity:    pulumi.Int(desiredCapacity),
-			MinSize:            pulumi.Int(minSize),
-			MaxSize:            pulumi.Int(maxSize),
+		// Get the Pulumi stack name
+		stackName := ctx.Stack()
+
+		// Use the stack name as the cluster name
+		cluster, err := eks.NewCluster(ctx, stackName, &eks.ClusterArgs{
 			CreateOidcProvider: pulumi.Bool(true),
 			Version:            pulumi.String(version),
 			Fargate:            pulumi.Bool(true),
