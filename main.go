@@ -16,7 +16,6 @@ func main() {
 		cluster, err := eks.NewCluster(ctx, stackName, &eks.ClusterArgs{
 			CreateOidcProvider: pulumi.Bool(true),
 			Version:            pulumi.String(version),
-			Fargate:            pulumi.Bool(true),
 		})
 		if err != nil {
 			return err
