@@ -10,13 +10,9 @@ func main() {
 	pulumi.Run(func(ctx *pulumi.Context) error {
 
 		cfg := config.New(ctx, "")
-
 		version := cfg.Require("version")
-
-		// Get the Pulumi stack name
 		stackName := ctx.Stack()
 
-		// Use the stack name as the cluster name
 		cluster, err := eks.NewCluster(ctx, stackName, &eks.ClusterArgs{
 			CreateOidcProvider: pulumi.Bool(true),
 			Version:            pulumi.String(version),
